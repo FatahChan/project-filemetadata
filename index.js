@@ -1,9 +1,11 @@
-var express = require('express');
-var cors = require('cors');
-require('dotenv').config()
+const express = require('express');
+const cors = require('cors');
+require('dotenv').config();
+const fileUpload = require('express-fileupload');
 
-var app = express();
 
+const app = express();
+app.use(fileUpload({createParentPath: true, preserveExtension: true}));
 app.use(cors());
 app.use('/public', express.static(process.cwd() + '/public'));
 
@@ -11,6 +13,14 @@ app.get('/', function (req, res) {
     res.sendFile(process.cwd() + '/views/index.html');
 });
 
+app.post('/api/fileanalyse', (req, res) =>{
+  let file = req.files.upfile;
+
+  console.log(file.name);
+  console.log(file.size);
+  console.log(file.mimetype);
+  res.json({name: req.files.upfile.name, type: req.files.upfile.mimetype, size: file.size});
+})
 
 
 
